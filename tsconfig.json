@@ -1,27 +1,14 @@
 {
   "compilerOptions": {
-    /* Project Structure */
-    "rootDir": "./src",
+    "target": "es2020",
+    "module": "commonjs",
     "outDir": "./dist",
-
-    /* Language and Environment */
-    "target": "ES2020",
-    "module": "CommonJS",
-    "lib": ["ES2020"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "types": ["node"],
-
-    /* Output Options */
-    "sourceMap": true,
-    "declaration": false,
+    "rootDir": "./src",
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-
-    /* Extra checks */
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
