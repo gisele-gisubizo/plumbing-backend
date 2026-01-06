@@ -15,12 +15,12 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 
-// Connect to DB and seed test user
+// Connect to DB and seed test user (optional)
 AppDataSource.initialize()
   .then(async () => {
     console.log("Database connected ✅✅✅");
 
-    // Seed a test user
+    // Optional: Seed a test user if needed
     const userRepository = AppDataSource.getRepository(User);
     const testEmail = "admin@plumbing.com";
     const testUser = await userRepository.findOneBy({ email: testEmail });

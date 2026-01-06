@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "/Users/Cp9-30/.nvm/versions/node/v20.13.1/bin/npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/Cp9-30/Desktop"
+      ]
+    }
+  }
+}
+
+
