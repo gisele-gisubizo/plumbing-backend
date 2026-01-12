@@ -13,4 +13,7 @@ export class User {
 
   @Column({ nullable: true })
   refreshToken!: string;
+
+  @Column({ default: "user" })
+  role!: string; // "admin" or "user"
 }

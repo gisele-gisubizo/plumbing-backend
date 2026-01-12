@@ -8,7 +8,7 @@ import crypto from "crypto";
 
 const userRepository = AppDataSource.getRepository(User);
 
-// In-memory OTP storage (not production-ready; use Redis or DB for persistence)
+
 const otpStorage: Map<string, { otp: string; expires: number }> = new Map();
 
 export const register = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Generate OTP
+    
     const otp = crypto.randomInt(100000, 999999).toString();
     const expires = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
     otpStorage.set(email, { otp, expires });
@@ -29,7 +29,7 @@ export const register = async (req: Request, res: Response) => {
     await sendMail(email, "Your OTP for Registration", `Your OTP is ${otp}. It expires in 10 minutes.`);
 
     // Temporarily store hashed password in session or return a temp token (for simplicity, we'll verify in next step)
-    // For now, we'll assume verification happens next; in production, use sessions or temp tokens
+
     return res.status(200).json({ message: "OTP sent to your email. Verify to complete registration." });
   } catch (error) {
     return res.status(500).json({ message: "Error initiating registration", error });
@@ -47,7 +47,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     // OTP valid, create user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = userRepository.create({ email, password: hashedPassword });
+    const user = userRepository.create({ email, password: hashedPassword, role: "user" });
     await userRepository.save(user);
 
     // Clean up OTP
@@ -55,7 +55,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     await sendMail(email, "Welcome to Plumbing Backend", "Thank you for registering!");
 
-    return res.status(201).json({ message: "User registered successfully", user: { id: user.id, email } });
+    return res.status(201).json({ message: "User registered successfully", user: { id: user.id, email, role: user.role } });
   } catch (error) {
     return res.status(500).json({ message: "Error verifying OTP", error });
   }
@@ -69,10 +69,23 @@ export const login = async (req: Request, res: Response) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || "your-secret-key", {
-      expiresIn: "1h",
+    
+    // Include role in JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role }, 
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "1h" }
+    );
+    
+    return res.status(200).json({ 
+      message: "Login successful", 
+      token, 
+      user: { 
+        id: user.id, 
+        email: user.email,
+        role: user.role
+      } 
     });
-    return res.status(200).json({ message: "Login successful", token, user: { id: user.id, email: user.email } });
   } catch (error) {
     return res.status(500).json({ message: "Error logging in", error });
   }
