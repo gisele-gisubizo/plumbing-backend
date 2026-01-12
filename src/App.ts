@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { AppDataSource } from "./config/database";
 import authRoutes from "./routes/authRoutes";
 import plumberRoutes from "./routes/plumberRoutes";
+import serviceRoutes from "./routes/serviceRoutes";
 import { sendMail } from "./services/emailService";
 import { User } from "./entities/User";
 import bcrypt from "bcryptjs";
@@ -16,6 +17,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/plumbers", plumberRoutes);
+app.use("/api/services", serviceRoutes);
 
 // Connect to DB and seed test user (optional)
 AppDataSource.initialize()
