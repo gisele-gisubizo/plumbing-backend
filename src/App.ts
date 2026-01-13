@@ -5,6 +5,7 @@ import { AppDataSource } from "./config/database";
 import authRoutes from "./routes/authRoutes";
 import plumberRoutes from "./routes/plumberRoutes";
 import serviceRoutes from "./routes/serviceRoutes";
+import bookingRoutes from "./routes/bookingRoutes";
 import { sendMail } from "./services/emailService";
 import { User } from "./entities/User";
 import bcrypt from "bcryptjs";
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/plumbers", plumberRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // Connect to DB and seed test user (optional)
 AppDataSource.initialize()
